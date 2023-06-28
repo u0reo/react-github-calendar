@@ -1,7 +1,12 @@
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
-import Calendar, { Activity, type Props as CalendarProps, Skeleton } from 'react-activity-calendar';
+import Calendar, {
+  Activity,
+  type Props as CalendarProps,
+  Skeleton,
+  Level,
+} from 'react-activity-calendar';
 
-import { API_URL, DEFAULT_THEME } from './constants';
+import { API_URL, DEFAULT_THEME, CONTRIBUTION_LEVEL } from './constants';
 import { ApiErrorResponse, ApiResponse, Year } from './types';
 import { transformData } from './utils';
 
@@ -13,7 +18,7 @@ export interface Props extends Omit<CalendarProps, 'data'> {
 }
 
 async function fetchCalendarData(username: string, year: Year): Promise<ApiResponse> {
-  const response = await fetch(`${API_URL}${username}?y=${year}`);
+  const response = await fetch(`${API_URL}${username}.json?y=${year}`);
   const data: ApiResponse | ApiErrorResponse = await response.json();
 
   if (!response.ok) {
@@ -39,7 +44,15 @@ const GitHubCalendar: FunctionComponent<Props> = ({
     setLoading(true);
     setError(null);
     fetchCalendarData(username, year)
-      .then(({ contributions }) => setData(contributions))
+      .then(({ contributions }) =>
+        setData(
+          contributions.flat().map(c => ({
+            date: c.date,
+            count: c.contributionCount,
+            level: CONTRIBUTION_LEVEL.indexOf(c.contributionLevel) as Level,
+          })),
+        ),
+      )
       .catch(setError)
       .finally(() => setLoading(false));
   }, [username, year]);

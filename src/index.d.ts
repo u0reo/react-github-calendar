@@ -1,8 +1,5 @@
 import { FunctionComponent } from 'react';
-import {
-  Activity,
-  Props as ActivityCalendarProps,
-} from 'react-activity-calendar';
+import { Activity, Props as ActivityCalendarProps } from 'react-activity-calendar';
 
 export interface Props extends Omit<ActivityCalendarProps, 'data'> {
   username: string;

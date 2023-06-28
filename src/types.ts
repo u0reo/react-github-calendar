@@ -1,13 +1,19 @@
-import { Activity } from 'react-activity-calendar';
+import { CONTRIBUTION_LEVEL } from './constants';
 
 export type Year = number | 'last';
 
+export type ContributionLevel = (typeof CONTRIBUTION_LEVEL)[number];
+
 export interface ApiResponse {
-  total: {
-    [year: number]: number;
-    [year: string]: number; // 'lastYear;
-  };
-  contributions: Array<Activity>;
+  contributions: Array<
+    Array<{
+      color: string;
+      contributionCount: number;
+      contributionLevel: ContributionLevel;
+      date: string;
+    }>
+  >;
+  totalContributions: number;
 }
 
 export interface ApiErrorResponse {
