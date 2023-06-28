@@ -19,7 +19,8 @@
     "start": "rollup -c -w"
   },
   "dependencies": {
-    "react-activity-calendar": "^2.0.0"
+    "react-activity-calendar": "^2.0.0",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
