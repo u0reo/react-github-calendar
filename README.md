@@ -11,32 +11,32 @@ A React component to display a GitHub contributions graph based on
 
 ## Installation
 
-```
-yarn add react-github-calendar
+```shell
+npm install react-github-calendar
 ```
 
 ## Development
 
 Start watch mode for library first:
 
-```
-yarn
-yarn start
+```shell
+npm install
+npm run dev
 ```
 
 Then start watch mode of example page:
 
-```
+```shell
 cd example
-yarn
-yarn start
+npm install
+npm run dev
 ```
 
 Open http://localhost:3000.
 
 ## Publish a new release
 
-```
+```shell
 npm publish --dry-run
 
 # When you're happy
@@ -45,6 +45,6 @@ npm publish --access=public
 
 ### Update demo page
 
-```
-yarn deploy
+```shell
+npm run deploy
 ```

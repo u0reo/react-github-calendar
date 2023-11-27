@@ -1,11 +1,11 @@
-import React, { FormEventHandler, FunctionComponent, useState } from 'react';
+import { createRef, FormEventHandler, FunctionComponent, useState } from 'react';
 import GitHubCalendar, { Props } from 'react-github-calendar';
 
-import './Demo.css';
-import pkg from '../package.json';
+import '../styles.scss';
+import pkg from '../../package.json';
 
-import CodeBlock from './CodeBlock';
-import ForkMe from './ForkMe';
+import CodeBlock from './CodeBlock.tsx';
+import ForkMe from './ForkMe.tsx';
 import GitHubButton from 'react-github-btn';
 
 const selectLastHalfYear: Props['transformData'] = contributions => {
@@ -27,7 +27,7 @@ const selectLastHalfYear: Props['transformData'] = contributions => {
 
 const Demo: FunctionComponent = () => {
   const [username, setUsername] = useState('grubersjoe');
-  const input = React.createRef<HTMLInputElement>();
+  const input = createRef<HTMLInputElement>();
 
   const updateUsername: FormEventHandler = event => {
     event.preventDefault();
@@ -68,13 +68,13 @@ const Demo: FunctionComponent = () => {
 
           <GitHubCalendar username={username} fontSize={16} />
 
-          <p style={{ marginBottom: 12 }}>
+          <p style={{ marginBottom: '1.25rem' }}>
             Made with love by <a href="https://jogruber.de">@grubersjoe</a>, current version:{' '}
             <a href="https://www.npmjs.com/package/react-github-calendar">
               <code>v{pkg.version}</code>
             </a>
           </p>
-          <p>
+          <div>
             <GitHubButton
               href="https://github.com/grubersjoe/react-github-calendar"
               data-color-scheme="no-preference: light; light: light; dark: dark;"
@@ -85,7 +85,7 @@ const Demo: FunctionComponent = () => {
             >
               Star
             </GitHubButton>
-          </p>
+          </div>
         </section>
 
         <section>
@@ -108,7 +108,7 @@ const Demo: FunctionComponent = () => {
             </a>{' '}
             of <code>react-activity-calendar</code>
           </p>
-          <div style={{ overflowX: 'auto' }}>
+          <div className="table-overflow">
             <table>
               <thead>
                 <tr>
@@ -162,7 +162,11 @@ const Demo: FunctionComponent = () => {
                   <td>
                     (event: SyntheticEvent)
                     <br />
-                    &nbsp;&nbsp;{'=>'} (data: Activity)
+                    &nbsp;&nbsp;{'=>'} (data:{' '}
+                    <a href="https://github.com/grubersjoe/react-activity-calendar/blob/main/src/types.ts">
+                      Activity
+                    </a>
+                    )
                     <br />
                     &nbsp;&nbsp;{'=>'} void
                   </td>
@@ -269,16 +273,23 @@ const Demo: FunctionComponent = () => {
                   </td>
                   <td>GitHub theme</td>
                   <td>
-                    Set the calendar colors for the <code>light</code> and <code>dark</code> system
-                    color scheme. The color scale for at least one color scheme needs to be
-                    specified. For undefined values, the default theme is selected. By default, the
-                    calendar will use the currently set system color scheme, but you can enforce a
-                    specific color scheme with the <code>colorScheme</code> prop.
-                    <br />
-                    <br />
-                    Define each color scale explicitly with five colors or pass exactly two colors
-                    (lowest and highest intensity) to calculate a single-hue scale. Colors can be
-                    specified in any valid CSS format.
+                    <p>
+                      Set the calendar colors for the <code>light</code> and <code>dark</code>{' '}
+                      system color scheme. The color scale for at least one color scheme needs to be
+                      specified. For undefined values, the default theme is selected. By default,
+                      the calendar will use the currently set system color scheme, but you can
+                      enforce a specific color scheme with the <code>colorScheme</code> prop.
+                    </p>
+                    <p>
+                      Define each color scale explicitly with five colors or pass exactly two colors
+                      (lowest and highest intensity) to calculate a single-hue scale. Colors can be
+                      specified in any valid CSS format.
+                    </p>
+                    <p>
+                      <a href="https://grubersjoe.github.io/react-activity-calendar/?path=/story/react-activity-calendar--with-theme">
+                        See this example
+                      </a>
+                    </p>
                   </td>
                 </tr>
                 <tr>
@@ -341,8 +352,9 @@ const Demo: FunctionComponent = () => {
 
           <h3 id="example-transform-data">Usage of the transformData prop</h3>
           <p>
-            You can pass a function as <code>transformData</code> prop that receives the array of
-            contribution data to manipulate it. The following interface must be met:
+            You can pass a function as the <code>transformData</code> prop that receives the array
+            of contribution data to manipulate it. The transformation function must meet the
+            following signature:
           </p>
           <CodeBlock>
             {`interface Activity {
@@ -354,8 +366,8 @@ const Demo: FunctionComponent = () => {
 function transformData(data: Array<Activity>): Array<Activity>;`}
           </CodeBlock>
           <p>
-            For example, in order to show the last six months of contribution data you can use the
-            following:
+            For example, to only show the the contribution data of the last six months you can do
+            the following:
           </p>
           <CodeBlock>
             {`const selectLastHalfYear = contributions => {
@@ -381,7 +393,9 @@ function transformData(data: Array<Activity>): Array<Activity>;`}
   username="${username}" 
   transformData={selectLastHalfYear} 
   hideColorLegend
-  hideTotalCount
+  labels={{
+    totalCount: '{{count}} contributions in the last half year',
+  }}
 />`}
           </CodeBlock>
 
@@ -391,12 +405,14 @@ function transformData(data: Array<Activity>): Array<Activity>;`}
             username={username}
             transformData={selectLastHalfYear}
             hideColorLegend
-            hideTotalCount
             fontSize={16}
+            labels={{
+              totalCount: '{{count}} contributions in the last half year',
+            }}
           />
 
           <p>
-            Per default the total count will be calculated from the passed data. However, you can
+            The total count will be recalculated based on the transformed data. However, you can
             enforce that the total count of the untransformed data is shown by setting the{' '}
             <code>transformTotalCount</code> to <code>false</code>. The text of total count label
             below the calendar can be adjusted using the <code>labels.totalCount</code> prop and the{' '}

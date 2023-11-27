@@ -1,12 +1,7 @@
-import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
-import Calendar, {
-  Activity,
-  type Props as CalendarProps,
-  Skeleton,
-  Level,
-} from 'react-activity-calendar';
+import React, { useCallback, useEffect, useState } from 'react';
+import Calendar, { Activity, type Props as CalendarProps, Skeleton, Level } from 'react-activity-calendar';
 
-import { API_URL, DEFAULT_THEME, CONTRIBUTION_LEVEL } from './constants';
+import { API_URL, CONTRIBUTION_LEVEL, DEFAULT_THEME } from './constants';
 import { ApiErrorResponse, ApiResponse, Year } from './types';
 import { transformData } from './utils';
 
@@ -27,16 +22,15 @@ async function fetchCalendarData(username: string, year: Year): Promise<ApiRespo
 
   return data as ApiResponse;
 }
-
-const GitHubCalendar: FunctionComponent<Props> = ({
+const GitHubCalendar = ({
   username,
   year = 'last',
   labels,
-  transformData: transformDataProp,
+  transformData: transformDataCallback,
   transformTotalCount = true,
   ...props
-}) => {
-  const [data, setData] = useState<Array<Activity> | null>(null);
+}: Props) => {
+  const [data, setData] = useState<Activity[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -83,7 +77,7 @@ const GitHubCalendar: FunctionComponent<Props> = ({
 
   return (
     <Calendar
-      data={transformData(data, transformDataProp)}
+      data={transformData(data, transformDataCallback)}
       theme={theme}
       labels={Object.assign({}, defaultLabels, labels)}
       totalCount={totalCount}
